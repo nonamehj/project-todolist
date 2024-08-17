@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import TodoItem from "./TodoItem";
 import Alert from "./Alert";
+import { useRef } from "react";
 
 const getlocalStorage = () => {
   let todoItem = localStorage.getItem("todoItem");
@@ -16,6 +17,7 @@ function App() {
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
   const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
+  const editRef = useRef();
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!items) {
@@ -51,9 +53,9 @@ function App() {
   const editItem = (id) => {
     const findItem = list.find((item) => item.id === id);
     setItems(findItem.title);
-
     setIsEditing(true);
     setEditId(id);
+    editRef.current.focus();
   };
   const clearItem = () => {
     showAlert(true, "danger", "목록이 비어있습니다.");
@@ -76,6 +78,7 @@ function App() {
             value={items}
             placeholder="할 일 입력하세요"
             onChange={(e) => setItems(e.target.value)}
+            ref={editRef}
           />
           <button className="submit-btn">{isEditing ? "수정" : "추가"}</button>
         </div>
